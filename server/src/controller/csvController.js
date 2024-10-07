@@ -57,7 +57,33 @@ const uploadExcel = async (req, res) => {
     }
 };
 
+const fetchCsvData = async (req, res) => {
+    try {
+        const { page = 1, limit = 10 } = req.query;  
+
+        const pageNumber = parseInt(page);
+        const pageSize = parseInt(limit);
+
+        const data = await DynamicData.find()
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize);
+
+        const totalCount = await DynamicData.countDocuments();
+
+        res.status(200).json({
+            totalCount,
+            currentPage: pageNumber,
+            total: Math.ceil(totalCount / pageSize),
+            data
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error retrieving data', error: error.message });
+    }
+};
+
+
 module.exports = {
     uploadExcel,
     upload,
+    fetchCsvData
 };

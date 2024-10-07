@@ -1,9 +1,11 @@
 const express = require('express');
 
-const { uploadExcel, upload } = require('../controller/csvController');
+const { uploadExcel, upload, fetchCsvData } = require('../controller/csvController');
 
 const router = express.Router();
 
-router.post('/upload', upload.single('file'), uploadExcel);
+router.post('/CSV', upload.single('file'), uploadExcel);
+
+router.get('/CSV', upload.single('file'), fetchCsvData);
 
 module.exports = router;
