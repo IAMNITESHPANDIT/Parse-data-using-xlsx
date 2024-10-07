@@ -1,8 +1,8 @@
-
 const multer = require('multer');
 const path = require('path');
 const xlsx = require('xlsx');
 const fs = require('fs');
+const csvParser = require('csv-parser');  
 const { DynamicData } = require('../models/csv');
 
 const uploadsDir = path.join(__dirname, '..', 'uploads');
@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const uploadExcel = async (req, res) => {
+const uploadExcelOrCSV = async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded' });
     }
@@ -52,19 +52,42 @@ const uploadExcel = async (req, res) => {
         } catch (error) {
             res.status(500).json({ message: 'Error processing Excel file', error: error.message });
         }
+    } else if (extname === '.csv') {
+        try {
+            const results = [];
+            fs.createReadStream(filePath)
+                .pipe(csvParser())
+                .on('data', (data) => results.push(data))
+                .on('end', async () => {
+                    await DynamicData.insertMany(results);
+
+                    fs.unlink(filePath, (err) => {
+                        if (err) {
+                            console.error('Error deleting file:', err);
+                        } else {
+                            console.log('File deleted successfully');
+                        }
+                    });
+
+                    res.status(201).json({ message: 'CSV data uploaded and saved successfully!', data: results });
+                });
+        } catch (error) {
+            res.status(500).json({ message: 'Error processing CSV file', error: error.message });
+        }
     } else {
-        return res.status(400).json({ message: 'Unsupported file format. Please upload Excel files only.' });
+        return res.status(400).json({ message: 'Unsupported file format. Please upload Excel or CSV files only.' });
     }
 };
 
 const fetchCsvData = async (req, res) => {
     try {
-        const { page = 1, limit = 10 } = req.query;  
+        const { page = 1, limit = 10 } = req.query;
 
         const pageNumber = parseInt(page);
         const pageSize = parseInt(limit);
 
         const data = await DynamicData.find()
+            .sort({ createdAt: -1 }) 
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize);
 
@@ -83,7 +106,7 @@ const fetchCsvData = async (req, res) => {
 
 
 module.exports = {
-    uploadExcel,
+    uploadExcelOrCSV,
     upload,
     fetchCsvData
 };
