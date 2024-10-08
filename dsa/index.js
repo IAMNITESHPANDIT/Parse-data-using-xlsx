@@ -7,12 +7,8 @@ function findBalance(arr){
             return i // return the index
         }
         leftSum+=arr[i]
-    }
-
-
-    
+    } 
     return -1;
-
 }
 
 /** @here I've declare variable's name and passing in function  */
