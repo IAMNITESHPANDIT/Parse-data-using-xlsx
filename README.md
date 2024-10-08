@@ -59,7 +59,11 @@ root/
   
   ```
   POST /api/v1/csv
+
+  GET /api/v1/csv
   ```
+
+  
 
 ---
 
