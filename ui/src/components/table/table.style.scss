@@ -1,0 +1,128 @@
+.table-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
+    margin: auto;
+    margin-top: 15px;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 3px dotted #FFF;
+    border-style: solid solid dotted dotted;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 2s linear infinite;
+  }
+
+  .loader-container {
+    text-align: end;
+    width: 100%;
+    position: absolute;
+  }
+
+  .loader::after {
+    content: '';  
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border: 3px dotted #FF3D00;
+    border-style: solid solid dotted;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    animation: rotationBack 1s linear infinite;
+    transform-origin: center center;
+  }
+      
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  } 
+  @keyframes rotationBack {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(-360deg);
+    }
+  } 
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    
+    th, td {
+        padding: 12px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+    }
+
+    th {
+        background: rgba(255, 255, 255, 0.3);
+        color: #333;
+    }
+
+    tbody tr {
+        transition: background 0.3s;
+    }
+
+    tbody tr:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button {
+        background: rgba(255, 255, 255, 0.3);
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        margin: 0 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+
+        &:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            cursor: not-allowed;
+        }
+
+        &:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    }
+
+    span {
+        margin: 0 10px;
+        color: #333;
+    }
+}
+
+.loading, .error {
+    text-align: center;
+    font-size: 18px;
+    color: #f00; // Adjust the color for error text
+}
