@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import swal from 'sweetalert';
 import { ToastOnFailure, ToastOnSuccess } from "../utils/toaster";
 
 export const useFileUpload = (file) => {
